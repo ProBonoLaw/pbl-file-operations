@@ -1,0 +1,33 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/dotnet
+{
+	"name": "File-Operations",
+	"image": "mcr.microsoft.com/devcontainers/dotnet:2-10.0-noble",
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/devcontainers/features/azure-cli:1": {},
+		"ghcr.io/devcontainers-extra/features/bun:1": {
+			"version": "1.4.2"
+		}
+	},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [5000, 5001],
+	// "portsAttributes": {
+	//		"5001": {
+	//			"protocol": "https"
+	//		}
+	// }
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "dotnet restore",
+	"runArgs": [
+        "--env-file",
+        ".devcontainer/.env"
+    ],
+	// Configure tool-specific properties.
+	"customizations": {
+		"vscode": { "extensions": ["oven.bun-vscode", "ms-dotnettools.csharp", "openai.chatgpt", "github.vscode-github-actions", "github.vscode-pull-request-github"] }
+	},
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}

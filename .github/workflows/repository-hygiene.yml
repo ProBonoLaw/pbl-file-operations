@@ -1,0 +1,45 @@
+name: Repository hygiene
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+      - name: Check identifier scanner
+        run: node --test .github/scripts/check-public-repository.test.mjs
+      - name: Check public files
+        run: node .github/scripts/check-public-repository.mjs
+      - name: Check history for reintroduced identifiers
+        env:
+          REPOSITORY_VISIBILITY: ${{ github.event.repository.visibility }}
+          PUBLIC_HISTORY_BASELINE: ${{ vars.PUBLIC_HISTORY_BASELINE }}
+        run: node .github/scripts/check-public-repository.mjs --ci-history
+
+  secrets:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Install verified secret scanner
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/scripts/install-gitleaks.sh
+      - name: Scan history for secrets without printing values
+        run: gitleaks git --redact=100 --no-banner --log-opts='--all' .

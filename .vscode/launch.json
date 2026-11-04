@@ -1,0 +1,151 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "File Operations: Gateway (Azure Test)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build FileOperations",
+      "program": "${workspaceFolder}/src/FileOperations/bin/Debug/net10.0/FileOperations.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/FileOperations",
+      "env": {
+        "ROLE": "gateway",
+        "AZURE_TOKEN_CREDENTIALS": "AzureCliCredential",
+        "APPSETTINGS_FILE": "${workspaceFolder}/.vscode/azure-test.appsettings.json",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://localhost:5080"
+      },
+      "console": "integratedTerminal",
+      "stopAtEntry": false
+    },
+    {
+      "name": "File Operations: Data Integrity API (Azure Test)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build FileOperations",
+      "program": "${workspaceFolder}/src/FileOperations/bin/Debug/net10.0/FileOperations.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/FileOperations",
+      "env": {
+        "ROLE": "data-integrity-api",
+        "AZURE_TOKEN_CREDENTIALS": "AzureCliCredential",
+        "APPSETTINGS_FILE": "${workspaceFolder}/.vscode/azure-test.appsettings.json",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://localhost:5081"
+      },
+      "console": "integratedTerminal",
+      "stopAtEntry": false
+    },
+    {
+      "name": "File Operations: Data Ingestion API (Azure Test)",
+      "type": "bun",
+      "request": "launch",
+      "preLaunchTask": "build DataIngestionService",
+      "program": "${workspaceFolder}/src/DataIngestionService/dist/src/index.js",
+      "cwd": "${workspaceFolder}/src/DataIngestionService",
+      "env": {
+        "PORT": "5082",
+        "AZURE_TOKEN_CREDENTIALS": "AzureCliCredential",
+        "APPSETTINGS_FILE": "${workspaceFolder}/.vscode/azure-test.appsettings.json"
+      },
+      "runtime": "bun",
+      "stopOnEntry": false
+    },
+    {
+      "name": "File Operations: Evidence Extraction (Azure Test)",
+      "type": "bun",
+      "request": "launch",
+      "preLaunchTask": "build DataIngestionService",
+      "program": "${workspaceFolder}/src/DataIngestionService/dist/src/index.js",
+      "cwd": "${workspaceFolder}/src/DataIngestionService",
+      "env": {
+        "ROLE": "evidence-extraction",
+        "PORT": "5084",
+        "AZURE_TOKEN_CREDENTIALS": "AzureCliCredential",
+        "APPSETTINGS_FILE": "${workspaceFolder}/.vscode/azure-test.appsettings.json"
+      },
+      "runtime": "bun",
+      "stopOnEntry": false
+    },
+    {
+      "name": "File Operations: Ingestion (Azure Test)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build FileOperations",
+      "program": "${workspaceFolder}/src/FileOperations/bin/Debug/net10.0/FileOperations.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/FileOperations",
+      "env": {
+        "ROLE": "ingestion",
+        "AZURE_TOKEN_CREDENTIALS": "AzureCliCredential",
+        "APPSETTINGS_FILE": "${workspaceFolder}/.vscode/azure-test.appsettings.json",
+        "EVENTHUB_CONSUMER_GROUP": "ingestion-group",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_ENVIRONMENT": "Development"
+      },
+      "console": "integratedTerminal",
+      "stopAtEntry": false
+    },
+    {
+      "name": "File Operations: Deletion (Azure Test)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build FileOperations",
+      "program": "${workspaceFolder}/src/FileOperations/bin/Debug/net10.0/FileOperations.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/FileOperations",
+      "env": {
+        "ROLE": "deletion",
+        "AZURE_TOKEN_CREDENTIALS": "AzureCliCredential",
+        "APPSETTINGS_FILE": "${workspaceFolder}/.vscode/azure-test.appsettings.json",
+        "EVENTHUB_CONSUMER_GROUP": "data-deletion-flow",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_ENVIRONMENT": "Development"
+      },
+      "console": "integratedTerminal",
+      "stopAtEntry": false
+    },
+    {
+      "name": "File Operations: Shared Resource Sync (Azure Test)",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build FileOperations",
+      "program": "${workspaceFolder}/src/FileOperations/bin/Debug/net10.0/FileOperations.dll",
+      "args": [],
+      "cwd": "${workspaceFolder}/src/FileOperations",
+      "env": {
+        "ROLE": "shared-resource-sync",
+        "AZURE_TOKEN_CREDENTIALS": "AzureCliCredential",
+        "APPSETTINGS_FILE": "${workspaceFolder}/.vscode/azure-test.appsettings.json",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "DOTNET_ENVIRONMENT": "Development"
+      },
+      "console": "integratedTerminal",
+      "stopAtEntry": false
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Azure Test: Ingestion end-to-end",
+      "configurations": [
+        "File Operations: Gateway (Azure Test)",
+        "File Operations: Ingestion (Azure Test)",
+        "File Operations: Data Integrity API (Azure Test)",
+        "File Operations: Data Ingestion API (Azure Test)",
+        "File Operations: Evidence Extraction (Azure Test)"
+      ],
+      "stopAll": true
+    },
+    {
+      "name": "Azure Test: Deletion end-to-end",
+      "configurations": [
+        "File Operations: Gateway (Azure Test)",
+        "File Operations: Deletion (Azure Test)"
+      ],
+      "stopAll": true
+    }
+  ]
+}

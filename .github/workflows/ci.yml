@@ -1,0 +1,59 @@
+name: Application checks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: .bun-version
+      - name: Install and test Data Ingestion
+        run: |
+          bun install --cwd src/DataIngestionService --frozen-lockfile
+          bun run --cwd src/DataIngestionService lint
+          bun run --cwd src/DataIngestionService test
+      - name: Install native test dependencies
+        timeout-minutes: 10
+        run: |
+          bash .github/scripts/test-install-test-dependencies.sh
+          bash .github/scripts/install-test-dependencies.sh
+      - name: Test .NET services
+        run: |
+          dotnet test tests/HttpOrchestration.Tests/HttpOrchestration.Tests.csproj --configuration Release
+          dotnet test tests/FileOperations.Tests/FileOperations.Tests.csproj --configuration Release
+
+  # Keep this check name stable: main requires it before merging.
+  build-pull-request:
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
+      - name: Build File Operations
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: false
+          tags: file-operations:ci
+      - name: Build Data Ingestion
+        uses: docker/build-push-action@v7
+        with:
+          context: src/DataIngestionService
+          push: false
+          tags: file-operations-data-ingestion:ci

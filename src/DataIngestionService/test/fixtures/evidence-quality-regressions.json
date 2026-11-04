@@ -1,0 +1,701 @@
+{
+  "version": 1,
+  "description": "Frozen synthetic analogues of October 11 source-inspected failures. Identical candidates for comparison; provisional development labels, not human gold.",
+  "cases": [
+    {
+      "id": "narrative-impression-and-recorded-score",
+      "dimension": "classification",
+      "pages": [
+        "Report by Dr. Sam Reed.\n\n## Impressions\nAcademic ability was in the high average range.\n\n## Scores\nTotal Achievement score was 97, classified as average."
+      ],
+      "targetPage": 1,
+      "evidence": [
+        {
+          "id": "impression",
+          "page": 1,
+          "quote": "Academic ability was in the high average range."
+        },
+        {
+          "id": "score",
+          "page": 1,
+          "quote": "Total Achievement score was 97, classified as average."
+        }
+      ],
+      "candidates": [
+        {
+          "kind": "fact",
+          "item": {
+            "what": "Casey's academic ability was classified in the high average range.",
+            "factType": "assessmentResult",
+            "subject": [
+              "Casey"
+            ],
+            "reportedBy": [
+              "Dr. Sam Reed"
+            ],
+            "sourceQuote": "Academic ability was in the high average range."
+          }
+        },
+        {
+          "kind": "fact",
+          "item": {
+            "what": "Casey's Total Achievement score was 97, classified as average.",
+            "factType": "assessmentResult",
+            "subject": [
+              "Casey"
+            ],
+            "sourceQuote": "Total Achievement score was 97, classified as average."
+          }
+        }
+      ],
+      "expected": [
+        {
+          "kind": "claim",
+          "checks": [
+            {
+              "path": "claimType",
+              "equals": "opinion",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "claimant",
+              "equals": "Dr. Sam Reed",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "pattern": "academic ability.*high.average",
+              "candidateSupport": "not-established"
+            }
+          ],
+          "evidenceSets": [
+            [
+              "impression"
+            ]
+          ]
+        },
+        {
+          "kind": "fact",
+          "checks": [
+            {
+              "path": "factType",
+              "equals": "assessmentResult",
+              "candidateSupport": "supported"
+            },
+            {
+              "path": "what",
+              "pattern": "Total Achievement.*97.*average",
+              "candidateSupport": "supported"
+            }
+          ],
+          "evidenceSets": [
+            [
+              "score"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "reading-enumeration-coverage",
+      "dimension": "atomicity",
+      "pages": [
+        "Dr. Sam Reed recommends continuing reading interventions for Casey in small groups or one-on-one, including special education pull-out reading support, after-school tutoring, parent reading, and self-reading both with an adult present and alone."
+      ],
+      "targetPage": 1,
+      "evidence": [
+        {
+          "id": "source",
+          "page": 1,
+          "quote": "Dr. Sam Reed recommends continuing reading interventions for Casey in small groups or one-on-one, including special education pull-out reading support, after-school tutoring, parent reading, and self-reading both with an adult present and alone."
+        }
+      ],
+      "candidates": [
+        {
+          "kind": "claim",
+          "item": {
+            "statement": "Dr. Sam Reed recommends continuing reading interventions for Casey in small groups or one-on-one, including special education pull-out reading support, after-school tutoring, parent reading, and self-reading both with an adult present and alone.",
+            "claimant": "Dr. Sam Reed",
+            "claimType": "opinion",
+            "sourceQuote": "Dr. Sam Reed recommends continuing reading interventions for Casey in small groups or one-on-one, including special education pull-out reading support, after-school tutoring, parent reading, and self-reading both with an adult present and alone."
+          }
+        }
+      ],
+      "expected": [
+        {
+          "kind": "claim",
+          "checks": [
+            {
+              "path": "claimType",
+              "equals": "opinion",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "pattern": "pull.out|special education",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "notPattern": "tutoring|parent reading|self.reading",
+              "candidateSupport": "not-established"
+            }
+          ],
+          "evidenceSets": [
+            [
+              "source"
+            ]
+          ]
+        },
+        {
+          "kind": "claim",
+          "checks": [
+            {
+              "path": "claimType",
+              "equals": "opinion",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "pattern": "tutoring",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "notPattern": "pull.out|parent reading|self.reading",
+              "candidateSupport": "not-established"
+            }
+          ],
+          "evidenceSets": [
+            [
+              "source"
+            ]
+          ]
+        },
+        {
+          "kind": "claim",
+          "checks": [
+            {
+              "path": "claimType",
+              "equals": "opinion",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "pattern": "parent reading|parents? .*read",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "notPattern": "pull.out|tutoring|self.reading",
+              "candidateSupport": "not-established"
+            }
+          ],
+          "evidenceSets": [
+            [
+              "source"
+            ]
+          ]
+        },
+        {
+          "kind": "claim",
+          "checks": [
+            {
+              "path": "claimType",
+              "equals": "opinion",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "pattern": "self.reading|read.*(?:alone|independen)",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "notPattern": "pull.out|tutoring|parent reading",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "pattern": "adult.*present|presence.*adult|with.*adult",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "pattern": "alone",
+              "candidateSupport": "not-established"
+            }
+          ],
+          "evidenceSets": [
+            [
+              "source"
+            ]
+          ]
+        }
+      ],
+      "expectedAlternatives": [
+        [
+          {
+            "kind": "claim",
+            "checks": [
+              {
+                "path": "claimType",
+                "equals": "opinion",
+                "candidateSupport": "not-established"
+              },
+              {
+                "path": "what",
+                "pattern": "pull.out|special education",
+                "candidateSupport": "not-established"
+              },
+              {
+                "path": "what",
+                "notPattern": "tutoring|parent reading|self.reading",
+                "candidateSupport": "not-established"
+              }
+            ],
+            "evidenceSets": [
+              [
+                "source"
+              ]
+            ]
+          },
+          {
+            "kind": "claim",
+            "checks": [
+              {
+                "path": "claimType",
+                "equals": "opinion",
+                "candidateSupport": "not-established"
+              },
+              {
+                "path": "what",
+                "pattern": "tutoring",
+                "candidateSupport": "not-established"
+              },
+              {
+                "path": "what",
+                "notPattern": "pull.out|parent reading|self.reading",
+                "candidateSupport": "not-established"
+              }
+            ],
+            "evidenceSets": [
+              [
+                "source"
+              ]
+            ]
+          },
+          {
+            "kind": "claim",
+            "checks": [
+              {
+                "path": "claimType",
+                "equals": "opinion",
+                "candidateSupport": "not-established"
+              },
+              {
+                "path": "what",
+                "pattern": "parent reading|parents? .*read",
+                "candidateSupport": "not-established"
+              },
+              {
+                "path": "what",
+                "notPattern": "pull.out|tutoring|self.reading",
+                "candidateSupport": "not-established"
+              }
+            ],
+            "evidenceSets": [
+              [
+                "source"
+              ]
+            ]
+          },
+          {
+            "kind": "claim",
+            "checks": [
+              {
+                "path": "claimType",
+                "equals": "opinion",
+                "candidateSupport": "not-established"
+              },
+              {
+                "path": "what",
+                "pattern": "self.reading|read.*(?:alone|independen)",
+                "candidateSupport": "not-established"
+              },
+              {
+                "path": "what",
+                "notPattern": "pull.out|tutoring|parent reading",
+                "candidateSupport": "not-established"
+              },
+              {
+                "path": "what",
+                "pattern": "adult.*present|presence.*adult|with.*adult",
+                "candidateSupport": "not-established"
+              },
+              {
+                "path": "what",
+                "notPattern": "alone",
+                "candidateSupport": "not-established"
+              }
+            ],
+            "evidenceSets": [
+              [
+                "source"
+              ]
+            ]
+          },
+          {
+            "kind": "claim",
+            "checks": [
+              {
+                "path": "claimType",
+                "equals": "opinion",
+                "candidateSupport": "not-established"
+              },
+              {
+                "path": "what",
+                "pattern": "self.reading|read.*(?:alone|independen)",
+                "candidateSupport": "not-established"
+              },
+              {
+                "path": "what",
+                "notPattern": "pull.out|tutoring|parent reading",
+                "candidateSupport": "not-established"
+              },
+              {
+                "path": "what",
+                "pattern": "alone",
+                "candidateSupport": "not-established"
+              },
+              {
+                "path": "what",
+                "notPattern": "adult.*present|presence.*adult|with.*adult",
+                "candidateSupport": "not-established"
+              }
+            ],
+            "evidenceSets": [
+              [
+                "source"
+              ]
+            ]
+          }
+        ]
+      ],
+      "note": "Self-reading can retain both supported settings in one recommendation or separate adult-present and alone recommendations. Other interventions must each have their own record."
+    },
+    {
+      "id": "verbal-capability-enumeration",
+      "dimension": "atomicity",
+      "pages": [
+        "Dr. Sam Reed states that high verbal scores indicate good word knowledge, effective information retrieval, a strong ability to solve verbal problems, and effective communication of knowledge."
+      ],
+      "targetPage": 1,
+      "evidence": [
+        {
+          "id": "source",
+          "page": 1,
+          "quote": "Dr. Sam Reed states that high verbal scores indicate good word knowledge, effective information retrieval, a strong ability to solve verbal problems, and effective communication of knowledge."
+        }
+      ],
+      "candidates": [
+        {
+          "kind": "claim",
+          "item": {
+            "statement": "High verbal scores indicate a strong ability to solve verbal problems and effective communication of knowledge.",
+            "claimant": "Dr. Sam Reed",
+            "claimType": "opinion",
+            "sourceQuote": "Dr. Sam Reed states that high verbal scores indicate good word knowledge, effective information retrieval, a strong ability to solve verbal problems, and effective communication of knowledge."
+          }
+        }
+      ],
+      "expected": [
+        {
+          "kind": "claim",
+          "checks": [
+            {
+              "path": "claimType",
+              "equals": "opinion",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "pattern": "word knowledge",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "notPattern": "information retrieval|solve verbal|communication",
+              "candidateSupport": "not-established"
+            }
+          ],
+          "evidenceSets": [
+            [
+              "source"
+            ]
+          ]
+        },
+        {
+          "kind": "claim",
+          "checks": [
+            {
+              "path": "claimType",
+              "equals": "opinion",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "pattern": "information retrieval|retriev.*information",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "notPattern": "word knowledge|solve verbal|communication",
+              "candidateSupport": "not-established"
+            }
+          ],
+          "evidenceSets": [
+            [
+              "source"
+            ]
+          ]
+        },
+        {
+          "kind": "claim",
+          "checks": [
+            {
+              "path": "claimType",
+              "equals": "opinion",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "pattern": "solve verbal|verbal problem",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "notPattern": "word knowledge|information retrieval|communication",
+              "candidateSupport": "not-established"
+            }
+          ],
+          "evidenceSets": [
+            [
+              "source"
+            ]
+          ]
+        },
+        {
+          "kind": "claim",
+          "checks": [
+            {
+              "path": "claimType",
+              "equals": "opinion",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "pattern": "communication|communicat.*knowledge",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "notPattern": "word knowledge|information retrieval|solve verbal",
+              "candidateSupport": "not-established"
+            }
+          ],
+          "evidenceSets": [
+            [
+              "source"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concern-versus-causal-assertion",
+      "dimension": "causal-scope",
+      "pages": [
+        "Casey's parents are concerned about learning struggles for Casey due to a family history of learning disabilities."
+      ],
+      "targetPage": 1,
+      "evidence": [
+        {
+          "id": "source",
+          "page": 1,
+          "quote": "Casey's parents are concerned about learning struggles for Casey due to a family history of learning disabilities."
+        }
+      ],
+      "candidates": [
+        {
+          "kind": "claim",
+          "item": {
+            "statement": "Casey's parents are concerned about Casey's learning struggles, which they attribute to a family history of learning disabilities.",
+            "claimant": "Casey's parents",
+            "claimType": "belief",
+            "sourceQuote": "Casey's parents are concerned about learning struggles for Casey due to a family history of learning disabilities."
+          }
+        }
+      ],
+      "expected": [
+        {
+          "kind": "claim",
+          "checks": [
+            {
+              "path": "what",
+              "pattern": "concern.*learning.*family history",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "what",
+              "notPattern": "struggles.{0,35}(?:caused|attribut)|history.{0,35}caus|disabilities.{0,35}caus",
+              "candidateSupport": "not-established"
+            }
+          ],
+          "evidenceSets": [
+            [
+              "source"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "explicit-consent-annotations",
+      "dimension": "participant-roles",
+      "pages": [
+        "Morgan and Taylor consented to use of the report by the agency. No agency representative attended."
+      ],
+      "targetPage": 1,
+      "evidence": [
+        {
+          "id": "source",
+          "page": 1,
+          "quote": "Morgan and Taylor consented to use of the report by the agency. No agency representative attended."
+        }
+      ],
+      "candidates": [
+        {
+          "kind": "event",
+          "item": {
+            "what": "Morgan and Taylor consented to use of the report by the agency.",
+            "who": [
+              "Morgan",
+              "Taylor"
+            ],
+            "eventType": "agreement",
+            "sourceQuote": "Morgan and Taylor consented to use of the report by the agency. No agency representative attended.",
+            "eventStructure": {
+              "trigger": "",
+              "roles": []
+            }
+          }
+        }
+      ],
+      "expected": [
+        {
+          "kind": "event",
+          "checks": [
+            {
+              "path": "eventStructure.trigger.sourceQuote",
+              "equals": "consented",
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "eventStructure.roles",
+              "contains": [
+                {
+                  "participant": "Morgan"
+                },
+                {
+                  "participant": "Taylor"
+                }
+              ],
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "eventStructure.roles.length",
+              "equals": 2,
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "eventStructure.roles.0.role",
+              "oneOf": [
+                "actor",
+                "decisionMaker",
+                "signatory"
+              ],
+              "candidateSupport": "not-established"
+            },
+            {
+              "path": "eventStructure.roles.1.role",
+              "oneOf": [
+                "actor",
+                "decisionMaker",
+                "signatory"
+              ],
+              "candidateSupport": "not-established"
+            }
+          ],
+          "evidenceSets": [
+            [
+              "source"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "unidentified-discussion-participants",
+      "dimension": "participant-roles",
+      "pages": [
+        "Daily reading was discussed as an intervention. The record does not identify who discussed it."
+      ],
+      "targetPage": 1,
+      "evidence": [
+        {
+          "id": "source",
+          "page": 1,
+          "quote": "Daily reading was discussed as an intervention. The record does not identify who discussed it."
+        }
+      ],
+      "candidates": [
+        {
+          "kind": "event",
+          "item": {
+            "what": "Daily reading was discussed as an intervention.",
+            "who": [],
+            "eventType": "communication",
+            "sourceQuote": "Daily reading was discussed as an intervention. The record does not identify who discussed it.",
+            "eventStructure": {
+              "trigger": "",
+              "roles": []
+            }
+          }
+        }
+      ],
+      "expected": [
+        {
+          "kind": "event",
+          "checks": [
+            {
+              "path": "eventStructure.roles.length",
+              "equals": 0,
+              "candidateSupport": "supported"
+            },
+            {
+              "path": "who.length",
+              "equals": 0,
+              "candidateSupport": "supported"
+            }
+          ],
+          "evidenceSets": [
+            [
+              "source"
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

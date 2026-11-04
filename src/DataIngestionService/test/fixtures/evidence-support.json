@@ -1,0 +1,163 @@
+{
+  "version": 1,
+  "description": "Synthetic source-fidelity challenge cases inspired by FEVER. Gold annotations are authored expectations, not human-reviewed quality labels. Support refers to this source, not real-world truth.",
+  "cases": [
+    {
+      "id": "dated-occurrence-control", "dimension": "date",
+      "pages": ["On 4 March 2025, Jordan filed the application."], "targetPage": 1,
+      "evidence": [{"id":"filing","page":1,"quote":"On 4 March 2025, Jordan filed the application."}],
+      "candidates": [{"kind":"event","item":{"what":"Jordan filed the application.","who":["Jordan"],"whenStartedYear":"2025","whenStartedMonth":"3","whenStartedDay":"4","sourceQuote":"On 4 March 2025, Jordan filed the application."}}],
+      "expected": [{"kind":"event","checks":[
+        {"path":"whenStarted.year","equals":"2025","candidateSupport":"supported"},
+        {"path":"whenStarted.month","equals":"3","candidateSupport":"supported"},
+        {"path":"whenStarted.day","equals":"4","candidateSupport":"supported"},
+        {"path":"what","pattern":"filed.*application","candidateSupport":"supported"}
+      ],"evidenceSets":[["filing"]]}]
+    },
+    {
+      "id":"unrelated-date-on-consent", "dimension":"date",
+      "pages":["Assessment date: 4 March 2025.\nThe parents consented to the evaluation. The date of consent was not recorded."],"targetPage":1,
+      "evidence":[{"id":"consent","page":1,"quote":"The parents consented to the evaluation."},{"id":"unknown-date","page":1,"quote":"The date of consent was not recorded."}],
+      "candidates":[{"kind":"event","item":{"what":"The parents consented to the evaluation.","who":["The parents"],"whenStartedYear":"2025","whenStartedMonth":"3","whenStartedDay":"4","sourceQuote":"The parents consented to the evaluation."}}],
+      "expected":[{"kind":"fact","checks":[
+        {"path":"factType","equals":"undatedOccurrence","candidateSupport":"supported"},
+        {"path":"whenStarted.year","equals":null,"candidateSupport":"not-established"},
+        {"path":"whenStarted.month","equals":null,"candidateSupport":"not-established"},
+        {"path":"whenStarted.day","equals":null,"candidateSupport":"not-established"},
+        {"path":"whenEnded","equals":null,"candidateSupport":"supported"},
+        {"path":"what","pattern":"consent","candidateSupport":"supported"}
+      ],"evidenceSets":[["consent","unknown-date"]]}]
+    },
+    {
+      "id":"partial-date-control","dimension":"date",
+      "pages":["Jordan moved to Cedar House in 2023; the month and day were not recorded."],"targetPage":1,
+      "evidence":[{"id":"move","page":1,"quote":"Jordan moved to Cedar House in 2023; the month and day were not recorded."}],
+      "candidates":[{"kind":"event","item":{"what":"Jordan moved to Cedar House.","who":["Jordan"],"whenStartedYear":"2023","sourceQuote":"Jordan moved to Cedar House in 2023; the month and day were not recorded."}}],
+      "expected":[{"kind":"event","checks":[
+        {"path":"whenStarted.year","equals":"2023","candidateSupport":"supported"},
+        {"path":"whenStarted.month","equals":null,"candidateSupport":"supported"},
+        {"path":"whenStarted.day","equals":null,"candidateSupport":"supported"},
+        {"path":"what","pattern":"mov.*Cedar House","candidateSupport":"supported"}
+      ],"evidenceSets":[["move"]]}]
+    },
+    {
+      "id":"unknown-actor-preserve-occurrence","dimension":"participant",
+      "pages":["A payment was received on 9 June 2025. The payer was not identified."],"targetPage":1,
+      "evidence":[{"id":"payment","page":1,"quote":"A payment was received on 9 June 2025."},{"id":"payer","page":1,"quote":"The payer was not identified."}],
+      "candidates":[{"kind":"event","item":{"what":"A payment was received.","who":["Jordan"],"whenStartedYear":"2025","whenStartedMonth":"6","whenStartedDay":"9","sourceQuote":"A payment was received on 9 June 2025."}}],
+      "expected":[{"kind":"event","checks":[
+        {"path":"who","oneOf":[[],["Unknown"],["Unknown payer"],["Unidentified payer"]],"candidateSupport":"not-established"},
+        {"path":"what","pattern":"payment.*received|received.*payment","candidateSupport":"supported"},
+        {"path":"whenStarted.year","equals":"2025","candidateSupport":"supported"}
+      ],"evidenceSets":[["payment","payer"]]}]
+    },
+    {
+      "id":"parent-versus-report-author","dimension":"attribution",
+      "pages":["Report by Dr. Sam Reed.\nMorgan, the child's parent, reported that the child had trouble sleeping."],"targetPage":1,
+      "evidence":[{"id":"parent-report","page":1,"quote":"Morgan, the child's parent, reported that the child had trouble sleeping."}],
+      "candidates":[{"kind":"claim","item":{"statement":"The child had trouble sleeping.","claimant":"Dr. Sam Reed","sourceQuote":"Morgan, the child's parent, reported that the child had trouble sleeping."}}],
+      "expected":[{"kind":"claim","checks":[
+        {"path":"claimant","oneOf":["Morgan","Morgan (parent)","Morgan, the child's parent"],"candidateSupport":"refuted"},
+        {"path":"what","pattern":"trouble sleeping","candidateSupport":"supported"}
+      ],"evidenceSets":[["parent-report"]]}]
+    },
+    {
+      "id":"preserve-modality","dimension":"modality",
+      "pages":["Dr. Sam Reed wrote: Jordan may benefit from speech therapy."],"targetPage":1,
+      "evidence":[{"id":"possibility","page":1,"quote":"Dr. Sam Reed wrote: Jordan may benefit from speech therapy."}],
+      "candidates":[{"kind":"claim","item":{"statement":"Jordan will benefit from speech therapy.","claimant":"Dr. Sam Reed","sourceQuote":"Dr. Sam Reed wrote: Jordan may benefit from speech therapy."}}],
+      "expected":[{"kind":"claim","checks":[
+        {"path":"what","pattern":"may benefit|might benefit|could benefit|possibly benefit|potential.*benefit","candidateSupport":"not-established"},
+        {"path":"what","notPattern":"will benefit|definitely benefits","candidateSupport":"not-established"},
+        {"path":"claimant","equals":"Dr. Sam Reed","candidateSupport":"supported"}
+      ],"evidenceSets":[["possibility"]]}]
+    },
+    {
+      "id":"recommendation-is-not-treatment","dimension":"event-status",
+      "pages":["Dr. Sam Reed recommended that Jordan begin therapy. No therapy had begun."],"targetPage":1,
+      "evidence":[{"id":"recommendation","page":1,"quote":"Dr. Sam Reed recommended that Jordan begin therapy."},{"id":"not-begun","page":1,"quote":"No therapy had begun."}],
+      "candidates":[{"kind":"event","item":{"what":"Jordan began therapy.","who":["Jordan"],"sourceQuote":"Dr. Sam Reed recommended that Jordan begin therapy."}}],
+      "expected":[{"kind":"claim","checks":[
+        {"path":"claimant","equals":"Dr. Sam Reed","candidateSupport":"not-established"},
+        {"path":"what","pattern":"recommend|should|ought","candidateSupport":"refuted"}
+      ],"evidenceSets":[["recommendation"]]}]
+    },
+    {
+      "id":"preserve-negation","dimension":"polarity",
+      "pages":["Morgan denied receiving the notice."],"targetPage":1,
+      "evidence":[{"id":"denial","page":1,"quote":"Morgan denied receiving the notice."}],
+      "candidates":[{"kind":"claim","item":{"statement":"Morgan received the notice.","claimant":"Morgan","polarity":"asserts","sourceQuote":"Morgan denied receiving the notice."}}],
+      "expected":[{"kind":"claim","checks":[
+        {"path":"claimPolarity","equals":"denies","candidateSupport":"refuted"},
+        {"path":"claimant","equals":"Morgan","candidateSupport":"supported"},
+        {"path":"what","pattern":"notice","candidateSupport":"supported"}
+      ],"evidenceSets":[["denial"]]}]
+    },
+    {
+      "id":"opposing-claims-both-survive","dimension":"contradiction",
+      "pages":["Alex stated that Jordan paid the bill. Morgan denied that Jordan paid the bill."],"targetPage":1,
+      "evidence":[{"id":"assertion","page":1,"quote":"Alex stated that Jordan paid the bill."},{"id":"denial","page":1,"quote":"Morgan denied that Jordan paid the bill."}],
+      "candidates":[
+        {"kind":"claim","item":{"statement":"Jordan paid the bill.","claimant":"Alex","sourceQuote":"Alex stated that Jordan paid the bill."}},
+        {"kind":"claim","item":{"statement":"Jordan paid the bill.","claimant":"Morgan","polarity":"denies","sourceQuote":"Morgan denied that Jordan paid the bill."}}
+      ],
+      "expected":[
+        {"kind":"claim","checks":[{"path":"claimant","equals":"Alex","candidateSupport":"supported"},{"path":"claimPolarity","equals":"asserts","candidateSupport":"supported"}],"evidenceSets":[["assertion"]]},
+        {"kind":"claim","checks":[{"path":"claimant","equals":"Morgan","candidateSupport":"supported"},{"path":"claimPolarity","equals":"denies","candidateSupport":"supported"}],"evidenceSets":[["denial"]]}
+      ]
+    },
+    {
+      "id":"cross-page-speaker-link","dimension":"attribution",
+      "pages":["Witness register: W-17 is Morgan Vale.\nW-17 identifies Morgan Vale in this transcript.","W-17: I saw Jordan leave the building."],"targetPage":2,
+      "evidence":[{"id":"register","page":1,"quote":"Witness register: W-17 is Morgan Vale."},{"id":"alias","page":1,"quote":"W-17 identifies Morgan Vale in this transcript."},{"id":"statement","page":2,"quote":"W-17: I saw Jordan leave the building."}],
+      "candidates":[{"kind":"claim","item":{"statement":"Jordan left the building.","claimant":"Morgan Vale","sourceQuote":"W-17: I saw Jordan leave the building.","supportingQuotes":[{"pageNumber":1,"quote":"Witness register: W-17 is Morgan Vale."}]}}],
+      "expected":[{"kind":"claim","checks":[
+        {"path":"claimant","equals":"Morgan Vale","candidateSupport":"supported"},
+        {"path":"what","pattern":"Jordan.*(?:left|leave)","candidateSupport":"supported"}
+      ],"evidenceSets":[["register","statement"],["alias","statement"]]}]
+    },
+    {
+      "id":"unsupported-cause-only","dimension":"cause",
+      "pages":["Jordan fell on 9 June 2025. The cause of the fall was not established."],"targetPage":1,
+      "evidence":[{"id":"fall","page":1,"quote":"Jordan fell on 9 June 2025."},{"id":"cause","page":1,"quote":"The cause of the fall was not established."}],
+      "candidates":[{"kind":"event","item":{"what":"Jordan fell.","who":["Jordan"],"why":"A wet floor","whenStartedYear":"2025","whenStartedMonth":"6","whenStartedDay":"9","sourceQuote":"Jordan fell on 9 June 2025."}}],
+      "expected":[{"kind":"event","checks":[
+        {"path":"why","equals":"Unknown","candidateSupport":"not-established"},
+        {"path":"what","pattern":"Jordan.*fell","candidateSupport":"supported"},
+        {"path":"whenStarted.year","equals":"2025","candidateSupport":"supported"}
+      ],"evidenceSets":[["fall","cause"]]}]
+    },
+    {
+      "id":"assessment-fact-control","dimension":"fact-status",
+      "pages":["Score sheet: Jordan's total score was 97 (Average) on 4 March 2025."],"targetPage":1,
+      "evidence":[{"id":"score","page":1,"quote":"Score sheet: Jordan's total score was 97 (Average) on 4 March 2025."}],
+      "candidates":[{"kind":"fact","item":{"what":"Jordan's total score was 97 (Average).","subject":["Jordan"],"factType":"assessmentResult","asOfYear":"2025","asOfMonth":"3","asOfDay":"4","sourceQuote":"Score sheet: Jordan's total score was 97 (Average) on 4 March 2025."}}],
+      "expected":[{"kind":"fact","checks":[
+        {"path":"factType","equals":"assessmentResult","candidateSupport":"supported"},
+        {"path":"what","pattern":"97.*Average|Average.*97","candidateSupport":"supported"},
+        {"path":"asOf.year","equals":"2025","candidateSupport":"supported"},
+        {"path":"asOf.month","equals":"3","candidateSupport":"supported"},
+        {"path":"asOf.day","equals":"4","candidateSupport":"supported"}
+      ],"evidenceSets":[["score"]]}]
+    },
+    {
+      "id":"hedged-interpretation-is-claim","dimension":"fact-status",
+      "pages":["Dr. Sam Reed wrote: The pattern may suggest attention difficulties."],"targetPage":1,
+      "evidence":[{"id":"interpretation","page":1,"quote":"Dr. Sam Reed wrote: The pattern may suggest attention difficulties."}],
+      "candidates":[{"kind":"fact","item":{"what":"The pattern establishes attention difficulties.","factType":"condition","sourceQuote":"Dr. Sam Reed wrote: The pattern may suggest attention difficulties."}}],
+      "expected":[{"kind":"claim","checks":[
+        {"path":"claimant","equals":"Dr. Sam Reed","candidateSupport":"not-established"},
+        {"path":"what","pattern":"may|might|could|possib|suggest","candidateSupport":"not-established"},
+        {"path":"what","notPattern":"establishes|proves|definitely","candidateSupport":"not-established"}
+      ],"evidenceSets":[["interpretation"]]}]
+    },
+    {
+      "id":"unanchored-occurrence","dimension":"core-support",
+      "pages":["Weather log: light rain was recorded in the afternoon."],"targetPage":1,
+      "evidence":[{"id":"weather","page":1,"quote":"Weather log: light rain was recorded in the afternoon."}],
+      "candidates":[{"kind":"event","item":{"what":"Jordan was injured in a car collision.","who":["Jordan"],"sourceQuote":"Weather log: light rain was recorded in the afternoon."}}],
+      "expected":[],
+      "note":"A matching quote does not support the invented collision. Rejecting this candidate must not invent a replacement weather event."
+    }
+  ]
+}

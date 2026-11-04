@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "module": "node20",
+    "target": "es2025",
+    "lib": ["ES2025", "DOM"],
+    "moduleResolution": "node16",
+    "outDir": "dist",            // Output directory for compiled files
+    "rootDir": ".",              // Root directory for source code
+    "sourceMap": true,           // Generate source maps for debugging
+    "strict": true,              // Strict type checking (optional, can be set to `true` if needed)
+    "esModuleInterop": true,     // Ensure compatibility with common JS libraries
+    "skipLibCheck": true,        // Skip type checking of declaration files (speeds up compilation)
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,    // Allow importing JSON modules
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["src/**/*"],       // Include all source files in the `src` folder
+  "exclude": ["node_modules", "dist"]    // Exclude node_modules from compilation
+}

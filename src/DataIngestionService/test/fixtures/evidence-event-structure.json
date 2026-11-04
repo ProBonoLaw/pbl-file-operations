@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "description": "Synthetic event trigger, role and mention-link cases. Fixed candidates exercise production review. Human review and a separate extraction-recall evaluation are still needed.",
+  "cases": [
+    {
+      "id":"reversed-payment-roles","dimension":"participant-roles","pages":["On 4 March 2025, Jordan paid Casey 500 dollars."],"targetPage":1,
+      "evidence":[{"id":"payment","page":1,"quote":"On 4 March 2025, Jordan paid Casey 500 dollars."}],
+      "candidates":[{"kind":"event","item":{"what":"Jordan paid Casey 500 dollars.","who":["Jordan","Casey"],"eventType":"payment","whenStartedYear":"2025","whenStartedMonth":"3","whenStartedDay":"4","sourceQuote":"On 4 March 2025, Jordan paid Casey 500 dollars.","eventStructure":{"trigger":"paid","roles":[{"role":"payer","participant":1,"citations":[0]},{"role":"payee","participant":0,"citations":[0]}]}}}],
+      "expected":[{"kind":"event","checks":[
+        {"path":"eventStructure.trigger.sourceQuote","equals":"paid","candidateSupport":"supported"},
+        {"path":"eventStructure.roles","contains":[{"role":"payer","participant":"Jordan"},{"role":"payee","participant":"Casey"}],"candidateSupport":"refuted"},
+        {"path":"eventStructure.roles.length","equals":2,"candidateSupport":"refuted"}
+      ],"evidenceSets":[["payment"]]}]
+    },
+    {
+      "id":"sender-and-recipient","dimension":"participant-roles","pages":["Morgan sent the notice to Dr. Reed on 4 March 2025."],"targetPage":1,
+      "evidence":[{"id":"notice","page":1,"quote":"Morgan sent the notice to Dr. Reed on 4 March 2025."}],
+      "candidates":[{"kind":"event","item":{"what":"Morgan sent the notice to Dr. Reed.","who":["Morgan","Dr. Reed"],"eventType":"communication","whenStartedYear":"2025","whenStartedMonth":"3","whenStartedDay":"4","sourceQuote":"Morgan sent the notice to Dr. Reed on 4 March 2025."}}],
+      "expected":[{"kind":"event","checks":[
+        {"path":"eventStructure.trigger.sourceQuote","equals":"sent","candidateSupport":"not-established"},
+        {"path":"eventStructure.roles","contains":[{"role":"sender","participant":"Morgan"},{"role":"recipient","participant":"Dr. Reed"}],"candidateSupport":"not-established"}
+      ],"evidenceSets":[["notice"]]}]
+    },
+    {
+      "id":"repeated-payment-mentions","dimension":"mention-links","pages":["On 4 March 2025, Jordan paid Casey 500 dollars.","The payment just described was Jordan's payment of 500 dollars to Casey on 4 March 2025."],"targetPage":2,
+      "evidence":[{"id":"first","page":1,"quote":"On 4 March 2025, Jordan paid Casey 500 dollars."},{"id":"second","page":2,"quote":"The payment just described was Jordan's payment of 500 dollars to Casey on 4 March 2025."}],
+      "candidates":[
+        {"kind":"event","page":1,"item":{"what":"Jordan paid Casey 500 dollars.","who":["Jordan","Casey"],"eventType":"payment","whenStartedYear":"2025","whenStartedMonth":"3","whenStartedDay":"4","sourceQuote":"On 4 March 2025, Jordan paid Casey 500 dollars."}},
+        {"kind":"event","page":2,"item":{"what":"Jordan paid Casey 500 dollars.","who":["Jordan","Casey"],"eventType":"payment","whenStartedYear":"2025","whenStartedMonth":"3","whenStartedDay":"4","sourceQuote":"The payment just described was Jordan's payment of 500 dollars to Casey on 4 March 2025."}}
+      ],
+      "expected":[
+        {"kind":"event","checks":[{"path":"sourceSpans.0.pageNumber","equals":1,"candidateSupport":"supported"},{"path":"eventStructure.roles","contains":[{"role":"payer","participant":"Jordan"},{"role":"payee","participant":"Casey"}],"candidateSupport":"not-established"},{"path":"possibleRelatedEventMentionIds.length","equals":1,"candidateSupport":"not-established"}],"evidenceSets":[["first"]]},
+        {"kind":"event","checks":[{"path":"sourceSpans.0.pageNumber","equals":2,"candidateSupport":"supported"},{"path":"eventStructure.roles","contains":[{"role":"payer","participant":"Jordan"},{"role":"payee","participant":"Casey"}],"candidateSupport":"not-established"},{"path":"possibleRelatedEventMentionIds.length","equals":1,"candidateSupport":"not-established"}],"evidenceSets":[["second"]]}
+      ]
+    },
+    {
+      "id":"recurring-distinct-payments","dimension":"mention-links","pages":["On 4 March 2025, Jordan paid Casey 500 dollars.","On 5 March 2025, Jordan paid Casey another 500 dollars."],"targetPage":2,
+      "evidence":[{"id":"first","page":1,"quote":"On 4 March 2025, Jordan paid Casey 500 dollars."},{"id":"second","page":2,"quote":"On 5 March 2025, Jordan paid Casey another 500 dollars."}],
+      "candidates":[
+        {"kind":"event","page":1,"item":{"what":"Jordan paid Casey 500 dollars.","who":["Jordan","Casey"],"eventType":"payment","whenStartedYear":"2025","whenStartedMonth":"3","whenStartedDay":"4","sourceQuote":"On 4 March 2025, Jordan paid Casey 500 dollars."}},
+        {"kind":"event","page":2,"item":{"what":"Jordan paid Casey 500 dollars.","who":["Jordan","Casey"],"eventType":"payment","whenStartedYear":"2025","whenStartedMonth":"3","whenStartedDay":"5","sourceQuote":"On 5 March 2025, Jordan paid Casey another 500 dollars."}}
+      ],
+      "expected":[
+        {"kind":"event","checks":[{"path":"whenStarted.day","equals":"4","candidateSupport":"supported"},{"path":"eventStructure.roles","contains":[{"role":"payer","participant":"Jordan"},{"role":"payee","participant":"Casey"}],"candidateSupport":"not-established"},{"path":"possibleRelatedEventMentionIds.length","equals":0,"candidateSupport":"supported"}],"evidenceSets":[["first"]]},
+        {"kind":"event","checks":[{"path":"whenStarted.day","equals":"5","candidateSupport":"supported"},{"path":"eventStructure.roles","contains":[{"role":"payer","participant":"Jordan"},{"role":"payee","participant":"Casey"}],"candidateSupport":"not-established"},{"path":"possibleRelatedEventMentionIds.length","equals":0,"candidateSupport":"supported"}],"evidenceSets":[["second"]]}
+      ]
+    },
+    {
+      "id":"separate-witness-attestations","dimension":"attestations","pages":["On 6 March 2025, Alex stated: Jordan paid Casey 500 dollars.","On 6 March 2025, Morgan stated: Jordan paid Casey 500 dollars."],"targetPage":2,
+      "evidence":[{"id":"alex","page":1,"quote":"On 6 March 2025, Alex stated: Jordan paid Casey 500 dollars."},{"id":"morgan","page":2,"quote":"On 6 March 2025, Morgan stated: Jordan paid Casey 500 dollars."}],
+      "candidates":[
+        {"kind":"event","page":1,"item":{"what":"Alex stated that Jordan paid Casey 500 dollars.","who":["Alex"],"eventType":"communication","whenStartedYear":"2025","whenStartedMonth":"3","whenStartedDay":"6","sourceQuote":"On 6 March 2025, Alex stated: Jordan paid Casey 500 dollars."}},
+        {"kind":"event","page":2,"item":{"what":"Morgan stated that Jordan paid Casey 500 dollars.","who":["Morgan"],"eventType":"communication","whenStartedYear":"2025","whenStartedMonth":"3","whenStartedDay":"6","sourceQuote":"On 6 March 2025, Morgan stated: Jordan paid Casey 500 dollars."}}
+      ],
+      "expected":[
+        {"kind":"event","checks":[{"path":"eventStructure.roles","contains":[{"role":"speaker","participant":"Alex"}],"candidateSupport":"not-established"},{"path":"eventStructure.trigger.sourceQuote","equals":"stated","candidateSupport":"not-established"},{"path":"possibleRelatedEventMentionIds.length","equals":0,"candidateSupport":"supported"}],"evidenceSets":[["alex"]]},
+        {"kind":"event","checks":[{"path":"eventStructure.roles","contains":[{"role":"speaker","participant":"Morgan"}],"candidateSupport":"not-established"},{"path":"eventStructure.trigger.sourceQuote","equals":"stated","candidateSupport":"not-established"},{"path":"possibleRelatedEventMentionIds.length","equals":0,"candidateSupport":"supported"}],"evidenceSets":[["morgan"]]}
+      ]
+    },
+    {
+      "id":"distant-participant-identity","dimension":"document-context","contextMode":"document",
+      "pages":["Payer register: W-17 is Morgan Vale.","Administrative page 2.","Administrative page 3.","Administrative page 4.","Administrative page 5.","Administrative page 6.","Administrative page 7.","Administrative page 8.","Administrative page 9.","Administrative page 10.","Administrative page 11.","On 4 March 2025, W-17 paid Casey 500 dollars."],"targetPage":12,
+      "evidence":[{"id":"identity","page":1,"quote":"Payer register: W-17 is Morgan Vale."},{"id":"payment","page":12,"quote":"On 4 March 2025, W-17 paid Casey 500 dollars."}],
+      "candidates":[{"kind":"event","item":{"what":"Morgan Vale paid Casey 500 dollars.","who":["Morgan Vale","Casey"],"eventType":"payment","whenStartedYear":"2025","whenStartedMonth":"3","whenStartedDay":"4","sourceQuote":"On 4 March 2025, W-17 paid Casey 500 dollars."}}],
+      "expected":[{"kind":"event","checks":[{"path":"eventStructure.roles","contains":[{"role":"payer","participant":"Morgan Vale"},{"role":"payee","participant":"Casey"}],"candidateSupport":"not-established"}],"roleEvidence":[{"role":"payer","participant":"Morgan Vale","evidenceSets":[["identity","payment"]]}],"evidenceSets":[["identity","payment"]]}]
+    },
+    {
+      "id":"nominal-event-trigger","dimension":"trigger","pages":["Jordan's dismissal took effect on 9 June 2025."],"targetPage":1,
+      "evidence":[{"id":"dismissal","page":1,"quote":"Jordan's dismissal took effect on 9 June 2025."}],
+      "candidates":[{"kind":"event","item":{"what":"Jordan was dismissed.","who":["Jordan"],"eventType":"employmentAction","whenStartedYear":"2025","whenStartedMonth":"6","whenStartedDay":"9","sourceQuote":"Jordan's dismissal took effect on 9 June 2025."}}],
+      "expected":[{"kind":"event","checks":[{"path":"eventStructure.trigger.sourceQuote","oneOf":["dismissal","dismissal took effect"],"candidateSupport":"not-established"},{"path":"eventStructure.roles","contains":[{"role":"affectedPerson","participant":"Jordan"}],"candidateSupport":"not-established"}],"evidenceSets":[["dismissal"]]}]
+    },
+    {
+      "id":"implicit-state-change","dimension":"trigger","pages":["Placement register for Jordan. Before: Room 1. After: Room 2."],"targetPage":1,
+      "evidence":[{"id":"placement","page":1,"quote":"Placement register for Jordan. Before: Room 1. After: Room 2."}],
+      "candidates":[{"kind":"event","item":{"what":"Jordan's assigned room changed from Room 1 to Room 2.","who":["Jordan"],"eventType":"careChange","sourceQuote":"Placement register for Jordan. Before: Room 1. After: Room 2.","eventStructure":{"trigger":"","roles":[{"role":"subject","participant":0,"citations":[0]}]}}}],
+      "expected":[{"kind":"fact","checks":[{"path":"factType","equals":"undatedOccurrence","candidateSupport":"supported"},{"path":"whenStarted.year","equals":null,"candidateSupport":"supported"},{"path":"what","pattern":"Room 1.*Room 2","candidateSupport":"supported"},{"path":"eventStructure.roles","contains":[{"role":"subject","participant":"Jordan"}],"candidateSupport":"supported"}],"evidenceSets":[["placement"]]}]
+    }
+  ]
+}
