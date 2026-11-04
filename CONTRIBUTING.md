@@ -31,3 +31,6 @@ The repository hygiene workflow also runs identifier and credential scans; see
 ## Pull requests
 
 Keep changes focused, add or update tests, and describe the behavior change.
+This repository is the upstream for shared code; changes are made here first and
+then merged into downstream deployments. See
+[docs/publication.md](docs/publication.md#ongoing-workflow).

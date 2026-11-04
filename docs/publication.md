@@ -52,3 +52,20 @@ Before publication, also review the license, signed commit author information,
 submodules, LFS storage, releases, wiki, issue/PR content, Actions logs and
 artifacts, GitHub Pages, and repository/environment settings. A new import
 does not bring over those surfaces, which is why it is preferred here.
+
+## Ongoing workflow
+
+This repository is the upstream source of truth for shared code. The private
+deployment repository follows it and keeps its own configuration commits.
+
+- Make public-safe changes here through pull requests. The application checks
+  and both hygiene jobs must pass before merging.
+- The private repository brings changes in with `git fetch upstream` and
+  `git merge upstream/main`, then reviews the result in its own pull request.
+- Never push private branches, tags, or pull request refs to this repository.
+  Configure the private clone's upstream remote as fetch-only:
+  `git remote set-url --push upstream DISABLED`.
+- A change first made in the private repository is applied here as a reviewed
+  patch (`git format-patch`, then `git am` or `git apply`) on a clean clone of
+  this repository, rescanned, and submitted as a pull request. Do not merge or
+  cherry-pick across histories.
