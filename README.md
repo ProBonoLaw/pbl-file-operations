@@ -97,3 +97,8 @@ repository contains application checks and container build checks. See
 Copyright 2026 ProBono Law. Licensed under the [Apache License, Version 2.0](LICENSE). See
 [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and the
 [code of conduct](CODE_OF_CONDUCT.md).
+
+The `DaatPhoenix.HttpOrchestration` 1.0.2 package is also consumed by
+[ProBonoLaw/PBL-AIMIE-Operations](https://github.com/ProBonoLaw/PBL-AIMIE-Operations).
+Its CI restores from the ProBonoLaw feed using `GITHUB_TOKEN` with `packages: read`;
+no access to a private source organization is required.
