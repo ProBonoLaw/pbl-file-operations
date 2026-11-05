@@ -20,7 +20,27 @@ NuGet package from the repository root with:
 dotnet pack src/HttpOrchestration/HttpOrchestration.csproj --configuration Release
 ```
 
-Package publishing is managed separately from this public source repository.
+The package is published from this repository to ProBonoLaw's GitHub Packages
+NuGet feed: `https://nuget.pkg.github.com/probonolaw/index.json`. Its package ID
+and namespace remain `DaatPhoenix.HttpOrchestration` for consumer compatibility.
+Version `1.0.2` starts publication from this public source and avoids reusing
+cached versions from the earlier feed.
+
+After merging a version update into `main`, run **Publish HttpOrchestration**
+from the repository's Actions tab. The workflow tests and packs the library,
+checks package metadata and contents, then publishes with its short-lived
+`GITHUB_TOKEN`. Publishing is restricted to this repository's `main`; pull
+requests only build and validate the package. Retain the existing attribution,
+Apache-2.0 license, and NOTICE in redistributed packages.
+
+GitHub initially publishes packages as private. After the first publication,
+an organization package administrator must make the package public in its
+package settings and grant consuming repositories Actions read access.
+GitHub requires authentication even when installing a public NuGet package.
+Actions consumers can use `GITHUB_TOKEN` with `packages: read` when access is
+granted; local users can use a personal access token (classic) with
+`read:packages`. Do not commit a token to NuGet configuration. See
+[GitHub's NuGet registry documentation](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-nuget-registry).
 
 The asynchronous starter response must include a same-origin
 `statusQueryGetUri` or `Location` URL. Polling requests do not copy the starter
