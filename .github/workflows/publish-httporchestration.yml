@@ -71,3 +71,35 @@ jobs:
           dotnet nuget push artifacts/*.nupkg \
             --source https://nuget.pkg.github.com/probonolaw/index.json \
             --api-key "$NUGET_API_KEY" --skip-duplicate
+      - name: Verify a fresh install from the published feed
+        env:
+          NuGetPackageSourceCredentials_github: Username=${{ github.actor }};Password=${{ github.token }};ValidAuthenticationTypes=Basic
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          package=$(find artifacts -maxdepth 1 -name '*.nupkg' -print -quit)
+          version=${package#artifacts/DaatPhoenix.HttpOrchestration.}
+          version=${version%.nupkg}
+          verify_dir=$(mktemp -d)
+          trap 'rm -rf "$verify_dir"' EXIT
+          cat > "$verify_dir/NuGet.Config" <<'XML'
+          <configuration>
+            <packageSources>
+              <clear />
+              <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+              <add key="github" value="https://nuget.pkg.github.com/probonolaw/index.json" />
+            </packageSources>
+            <packageSourceMapping>
+              <packageSource key="github"><package pattern="DaatPhoenix.HttpOrchestration" /></packageSource>
+              <packageSource key="nuget.org"><package pattern="*" /></packageSource>
+            </packageSourceMapping>
+          </configuration>
+          XML
+          dotnet new classlib --framework net10.0 --no-restore --output "$verify_dir/Consumer"
+          dotnet add "$verify_dir/Consumer/Consumer.csproj" package DaatPhoenix.HttpOrchestration --version "$version" --no-restore
+          dotnet restore "$verify_dir/Consumer/Consumer.csproj" --configfile "$verify_dir/NuGet.Config" \
+            --packages "$verify_dir/packages" --no-http-cache
+          cmp "$package" "$verify_dir/packages/daatphoenix.httporchestration/$version/daatphoenix.httporchestration.$version.nupkg"
+          gh api 'orgs/probonolaw/packages?package_type=nuget' \
+            --jq '.[] | select((.name | ascii_downcase) == "daatphoenix.httporchestration") | {name,visibility,html_url}'
