@@ -1,0 +1,73 @@
+name: Publish HttpOrchestration
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - src/HttpOrchestration/**
+      - tests/HttpOrchestration.Tests/**
+      - .github/scripts/check-httporchestration-package.py
+      - .github/workflows/publish-httporchestration.yml
+      - LICENSE
+      - NOTICE
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: httporchestration-package-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - name: Test the library
+        run: dotnet test tests/HttpOrchestration.Tests/HttpOrchestration.Tests.csproj --configuration Release
+      - name: Pack and inspect the release
+        shell: bash
+        env:
+          SOURCE_COMMIT: ${{ github.sha }}
+        run: |
+          dotnet pack src/HttpOrchestration/HttpOrchestration.csproj \
+            --configuration Release --output artifacts -p:ContinuousIntegrationBuild=true
+          version=$(dotnet msbuild src/HttpOrchestration/HttpOrchestration.csproj -getProperty:Version)
+          python3 .github/scripts/check-httporchestration-package.py \
+            "artifacts/DaatPhoenix.HttpOrchestration.$version.nupkg" \
+            --version "$version" --commit "$SOURCE_COMMIT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: httporchestration-nuget
+          path: artifacts/*.nupkg
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    if: github.event_name == 'workflow_dispatch' && github.repository == 'ProBonoLaw/pbl-file-operations' && github.ref == 'refs/heads/main'
+    needs: package
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+      - uses: actions/download-artifact@v4
+        with:
+          name: httporchestration-nuget
+          path: artifacts
+      - name: Publish to ProBonoLaw GitHub Packages
+        env:
+          NUGET_API_KEY: ${{ github.token }}
+        run: |
+          dotnet nuget push artifacts/*.nupkg \
+            --source https://nuget.pkg.github.com/probonolaw/index.json \
+            --api-key "$NUGET_API_KEY" --skip-duplicate
